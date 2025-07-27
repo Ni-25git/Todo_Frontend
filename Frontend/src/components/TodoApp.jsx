@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { apiClient, API_ENDPOINTS } from '../config/api';
 import TodoList from './TodoList';
 import TodoForm from './TodoForm';
 import TodoFilter from './TodoFilter';
@@ -10,24 +10,12 @@ const TodoApp = ({ user, onLogout }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const api = axios.create({
-    baseURL: 'http://localhost:5000',
-    withCredentials: true
-  });
 
-  // Add auth token to requests
-  api.interceptors.request.use((config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  });
 
   const fetchTodos = async () => {
     try {
       setLoading(true);
-      const response = await api.get('/todo');
+      const response = await apiClient.get('/todo');
       setTodos(response.data.todos);
       setError('');
     } catch (error) {
@@ -40,7 +28,7 @@ const TodoApp = ({ user, onLogout }) => {
 
   const addTodo = async (todoData) => {
     try {
-      const response = await api.post('/todo/add', todoData);
+      const response = await apiClient.post('/todo/add', todoData);
       setTodos(prev => [response.data.newTodo, ...prev]);
     } catch (error) {
       setError('Failed to add todo');
@@ -50,7 +38,7 @@ const TodoApp = ({ user, onLogout }) => {
 
   const toggleTodo = async (id) => {
     try {
-      const response = await api.patch(`/todo/toggle/${id}`);
+      const response = await apiClient.patch(`/todo/toggle/${id}`);
       setTodos(prev => 
         prev.map(todo => 
           todo._id === id ? response.data.todo : todo
@@ -64,7 +52,7 @@ const TodoApp = ({ user, onLogout }) => {
 
   const updateTodo = async (id, todoData) => {
     try {
-      const response = await api.put(`/todo/update/${id}`, todoData);
+      const response = await apiClient.put(`/todo/update/${id}`, todoData);
       setTodos(prev => 
         prev.map(todo => 
           todo._id === id ? response.data.todo : todo
@@ -78,7 +66,7 @@ const TodoApp = ({ user, onLogout }) => {
 
   const deleteTodo = async (id) => {
     try {
-      await api.delete(`/todo/delete/${id}`);
+      await apiClient.delete(`/todo/delete/${id}`);
       setTodos(prev => prev.filter(todo => todo._id !== id));
     } catch (error) {
       setError('Failed to delete todo');
@@ -92,7 +80,7 @@ const TodoApp = ({ user, onLogout }) => {
       if (status === 'all') {
         await fetchTodos();
       } else {
-        const response = await api.get(`/todo/filter/${status}`);
+        const response = await apiClient.get(`/todo/filter/${status}`);
         setTodos(response.data.todos);
       }
       setFilter(status);

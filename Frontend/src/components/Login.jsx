@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from 'react';
+import { apiClient, API_ENDPOINTS } from '../config/api';
+import { checkBackendHealth, testLoginEndpoint } from '../utils/healthCheck';
 
 const Login = ({ setIsAuthenticated, setUser }) => {
   const [formData, setFormData] = useState({
@@ -8,6 +9,15 @@ const Login = ({ setIsAuthenticated, setUser }) => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Debug: Check backend health on component mount
+  useEffect(() => {
+    const debugBackend = async () => {
+      console.log('🔧 Debug: Checking backend connectivity...');
+      await checkBackendHealth();
+    };
+    debugBackend();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -22,9 +32,7 @@ const Login = ({ setIsAuthenticated, setUser }) => {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:5000/user/login', formData, {
-        withCredentials: true
-      });
+      const response = await apiClient.post(API_ENDPOINTS.LOGIN, formData);
 
       const { token, user } = response.data;
       localStorage.setItem('token', token);

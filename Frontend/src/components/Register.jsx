@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import { apiClient, API_ENDPOINTS } from '../config/api';
 
 const Register = ({ setIsAuthenticated, setUser }) => {
   const [formData, setFormData] = useState({
@@ -36,9 +36,7 @@ const Register = ({ setIsAuthenticated, setUser }) => {
 
     try {
       const { confirmPassword, ...registerData } = formData;
-      const response = await axios.post('http://localhost:5000/user/register', registerData, {
-        withCredentials: true
-      });
+      const response = await apiClient.post(API_ENDPOINTS.REGISTER, registerData);
 
       const { token, newUser } = response.data;
       localStorage.setItem('token', token);
