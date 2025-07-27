@@ -1,8 +1,16 @@
 // API Configuration
-const isDevelopment = import.meta.env.VITE_DEV;
+const isDevelopment = import.meta.env.VITE_DEV === 'true';
 export const API_BASE_URL = isDevelopment 
   ? '/api' 
   : (import.meta.env.VITE_API_BASE_URL || 'https://todo-backend-hi75.onrender.com');
+
+// Debug: Log the configuration
+console.log('🔧 API Configuration:', {
+  isDevelopment,
+  VITE_DEV: import.meta.env.VITE_DEV,
+  VITE_API_BASE_URL: import.meta.env.VITE_API_BASE_URL,
+  finalApiBaseUrl: API_BASE_URL
+});
 
 // API endpoints
 export const API_ENDPOINTS = {

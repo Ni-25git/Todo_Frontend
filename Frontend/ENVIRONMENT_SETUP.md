@@ -4,20 +4,28 @@ This project uses environment variables to configure the backend API URL.
 
 ## Setup Instructions
 
-1. **Copy the example environment file:**
+### Option 1: Using Scripts (Recommended)
+1. **Run the setup script:**
    ```bash
-   cp env.example .env.local
+   # Windows Command Prompt
+   setup-env.bat
+   
+   # Windows PowerShell
+   .\setup-env.ps1
    ```
 
-2. **The environment file contains:**
+### Option 2: Manual Setup
+1. **Create `.env.local` file in the Frontend directory with:**
    ```
    VITE_API_BASE_URL=https://todo-backend-hi75.onrender.com
+   VITE_DEV=false
    ```
 
-3. **For development (optional):**
-   If you want to use a local backend server, uncomment and modify the development URL:
+2. **For development (optional):**
+   If you want to use a local backend server, change to:
    ```
-   # VITE_API_BASE_URL=http://localhost:5000
+   VITE_API_BASE_URL=http://localhost:5000
+   VITE_DEV=true
    ```
 
 ## Environment Variables
@@ -25,6 +33,9 @@ This project uses environment variables to configure the backend API URL.
 - `VITE_API_BASE_URL`: The base URL for the backend API
   - Production: `https://todo-backend-hi75.onrender.com`
   - Development: `http://localhost:5000` (optional)
+- `VITE_DEV`: Controls whether to use proxy (true) or direct API calls (false)
+  - Production: `false` (direct API calls)
+  - Development: `true` (uses Vite proxy)
 
 ## API Configuration
 
